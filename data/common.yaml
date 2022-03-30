@@ -4,4 +4,4 @@ profile_globus::firewall::dports:
   - 50000:51000
 profile_globus::firewall::proto: "tcp"
 profile_globus::firewall:sources: 
-
+  - 0.0.0.0/0
