@@ -3,7 +3,7 @@
 # Configure firewall to allow Globus Services
 #
 # @param dports
-#   Destination ports or ranges of ports start:end required to be open for Globus services.
+#   Destination ports or ranges of ports start-end required to be open for Globus services.
 #
 # @param proto
 #   Protocol that needs to be open for Globus services.
@@ -21,7 +21,7 @@ class profile_globus::firewall (
 
   $sources.each | $location, $source |
   {
-    firewall { "200 allow Lustre via ${proto} from ${source}":
+    firewall { "290 allow Globus ${proto} from ${source}":
       proto  => $proto,
       dport  => $dports,
       source => $source,
