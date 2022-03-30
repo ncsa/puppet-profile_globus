@@ -3,7 +3,7 @@
 # Configure firewall to allow Globus Services
 #
 # @param dports
-#   Destination ports required to be open for Globus services.
+#   Destination ports or ranges of ports start:end required to be open for Globus services.
 #
 # @param proto
 #   Protocol that needs to be open for Globus services.
@@ -14,7 +14,7 @@
 # @example
 #   include profile_globus::firewall
 class profile_globus::firewall (
-  Array[Integer]  $dports,
+  Array[String]  $dports,
   String          $proto,
   Array[String]   $sources,
 ) {
