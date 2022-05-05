@@ -7,11 +7,11 @@
 class profile_globus::custom_gridftp (
   String     $conf='/etc/gridftp.d/custom_gridftp_conf',
 ){ 
-    file { $conf:
+    file { ${conf}:
+        ensure  => file,
         content => 'control_interface 127.0.0.1',
-        ensure => file,,
-        group  => root,
-        mode   => '0644',
-        owner  => root,
+        group   => root,
+        mode    => '0644',
+        owner   => root,
     }
 }
