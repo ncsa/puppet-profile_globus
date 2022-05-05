@@ -6,8 +6,8 @@
 #   include profile_globus::custom_gridftp
 class profile_globus::custom_gridftp (
   String     $conf='/etc/gridftp.d/custom_gridftp_conf',
-){ 
-    file { ${conf}:
+){
+    file { $conf:
         ensure  => file,
         content => 'control_interface 127.0.0.1',
         group   => root,
