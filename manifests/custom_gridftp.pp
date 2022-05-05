@@ -13,5 +13,6 @@ class profile_globus::custom_gridftp (
         group   => root,
         mode    => '0644',
         owner   => root,
+        notify  => Service['globus-gridftp-server'],
     }
 }
