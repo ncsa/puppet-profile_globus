@@ -1,7 +1,26 @@
---- 
+---
+lookup_options:
+  profile_globus::telegraf::gridftp_log_parse::script_cfg:
+    merge:
+      strategy: "deep"
+
 profile_globus::firewall::dports:
   - "443"
   - "50000-51000"
 profile_globus::firewall::proto: "tcp"
-profile_globus::firewall::sources: 
-  - 0.0.0.0/0
+profile_globus::firewall::sources:
+  - "0.0.0.0/0"
+
+profile_globus::telegraf::gridftp_log_parse::enabled: true
+profile_globus::telegraf::gridftp_log_parse::required_pip3_pkgs:
+  - "geoip2"
+  - "pygeohash"
+profile_globus::telegraf::gridftp_log_parse::required_pkgs:
+  - "python3"
+profile_globus::telegraf::gridftp_log_parse::script_cfg:
+  log_file_path: "/var/log/gridftp.log"
+  endpoint: ""  # Name of globus endpoint, ex : iccp
+profile_globus::telegraf::gridftp_log_parse::telegraf_cfg:
+  data_format: "influx"
+  interval: "1m"
+  timeout: "30s"
