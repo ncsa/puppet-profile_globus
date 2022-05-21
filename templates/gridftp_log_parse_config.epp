@@ -1,0 +1,15 @@
+<%- | $log_file_path,
+      $endpoint,
+| -%>
+# This file is managed by Puppet
+
+##Globus Log Parse Telegraf Config
+##
+## Example [ Description ]
+##
+##log="/var/log/gridftp.log" [ path to log file being watched ]
+##endpoint="iccp" [ name of endpoint ]
+
+readonly log="<%= $log_file_path %>"
+readonly endpoint="<%= $endpoint %>"
+
