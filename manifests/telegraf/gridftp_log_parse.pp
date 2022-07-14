@@ -5,9 +5,6 @@
 # @param enabled
 #   Enable or disable this health check
 #
-# @param required_pip3_pkgs
-#   List of required pip3 packages for this telegraf check
-#
 # @param required_pkgs
 #   List of required packages for this telegraf check
 #
@@ -19,6 +16,8 @@
 #   ```
 #   log_file_path: "/path/to/log_file"  # Defaults to: /var/log/gridftp.log
 #   endpoint: "name_of_globus_endpoint" # No default, required for log collecting to work
+#   default_lat: "gps_lat_coordinate"   # Will default to NCSA if not given
+#   default_long: "gps_long_coordinate" # Will default to NCSA if not given
 #   ```
 #
 # @param telegraf_cfg
@@ -28,7 +27,6 @@
 #   include profile_globus::telegraf::gridftp_log_parse
 class profile_globus::telegraf::gridftp_log_parse (
   Boolean         $enabled,
-  Array[ String ] $required_pip3_pkgs,
   Array[ String ] $required_pkgs,
   Hash            $script_cfg,
   Hash            $telegraf_cfg,
@@ -38,7 +36,6 @@ class profile_globus::telegraf::gridftp_log_parse (
   # Requirements specific for this check
   #
   ensure_packages($required_pkgs)
-  ensure_packages($required_pip3_pkgs, { provider => 'pip3' })
 
   if ( empty($script_cfg['endpoint'])) {
     notify {'profile_globus::telegraf::gridftp_log_parse::script_cfg missing value for endpoint':}
@@ -98,27 +95,4 @@ class profile_globus::telegraf::gridftp_log_parse (
     group   => 'telegraf',
     mode    => '0740',
   }
-
-  #
-  # Extra files needed for this telegraf check
-  #
-
-  # Setup mmdb file
-  file { "${script_path}/GeoLite2-City.mmdb" :
-    ensure  => $ensure_parm,
-    content => file("${module_name}/GeoLite2-City.mmdb"),
-    owner   => 'root',
-    group   => 'telegraf',
-    mode    => '0750',
-  }
-
-  # Setup python helper script
-  file { "${script_path}/ip2geohash.py" :
-    ensure  => $ensure_parm,
-    content => file("${module_name}/ip2geohash.py"),
-    owner   => 'root',
-    group   => 'telegraf',
-    mode    => '0750',
-  }
-
 }

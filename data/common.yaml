@@ -12,14 +12,13 @@ profile_globus::firewall::sources:
   - "0.0.0.0/0"
 
 profile_globus::telegraf::gridftp_log_parse::enabled: true
-profile_globus::telegraf::gridftp_log_parse::required_pip3_pkgs:
-  - "geoip2"
-  - "pygeohash"
 profile_globus::telegraf::gridftp_log_parse::required_pkgs:
-  - "python3"
+  - "curl"
 profile_globus::telegraf::gridftp_log_parse::script_cfg:
   log_file_path: "/var/log/gridftp.log"
   endpoint: ""  # Name of globus endpoint, ex : iccp
+  default_lat: "40.0951283"    # Default to NCSA
+  default_long: "-88.2420909"  # Default to NCSA
 profile_globus::telegraf::gridftp_log_parse::telegraf_cfg:
   data_format: "influx"
   interval: "1m"

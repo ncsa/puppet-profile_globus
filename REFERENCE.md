@@ -106,7 +106,6 @@ include profile_globus::telegraf::gridftp_log_parse
 The following parameters are available in the `profile_globus::telegraf::gridftp_log_parse` class:
 
 * [`enabled`](#enabled)
-* [`required_pip3_pkgs`](#required_pip3_pkgs)
 * [`required_pkgs`](#required_pkgs)
 * [`script_cfg`](#script_cfg)
 * [`telegraf_cfg`](#telegraf_cfg)
@@ -116,12 +115,6 @@ The following parameters are available in the `profile_globus::telegraf::gridftp
 Data type: `Boolean`
 
 Enable or disable this health check
-
-##### <a name="required_pip3_pkgs"></a>`required_pip3_pkgs`
-
-Data type: `Array[ String ]`
-
-List of required pip3 packages for this telegraf check
 
 ##### <a name="required_pkgs"></a>`required_pkgs`
 
@@ -138,8 +131,10 @@ Hash that controls the values for the script config file.
 Hash expects a value for these keys:
 
 ```
-log_file_path: "/path/to/log_file"
-endpoint: "name_of_globus_endpoint"
+log_file_path: "/path/to/log_file"  # Defaults to: /var/log/gridftp.log
+endpoint: "name_of_globus_endpoint" # No default, required for log collecting to work
+default_lat: "gps_lat_coordinate"   # Will default to NCSA if not given
+default_long: "gps_long_coordinate" # Will default to NCSA if not given
 ```
 
 ##### <a name="telegraf_cfg"></a>`telegraf_cfg`
