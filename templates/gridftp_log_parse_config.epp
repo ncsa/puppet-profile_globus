@@ -1,15 +1,13 @@
 <%- | $log_file_path,
       $endpoint,
+      $default_lat,
+      $default_long,
 | -%>
 # This file is managed by Puppet
 
 ##Globus Log Parse Telegraf Config
-##
-## Example [ Description ]
-##
-##log="/var/log/gridftp.log" [ path to log file being watched ]
-##endpoint="iccp" [ name of endpoint ]
 
-readonly log="<%= $log_file_path %>"
-readonly endpoint="<%= $endpoint %>"
-
+readonly log="<%= $log_file_path %>" ## Path to Transfer Log
+readonly endpoint="<%= $endpoint %>" ## Name of Globus Endpoint
+readonly default_lat="<%= $default_lat %>" ## Latitude for default location if ip can't resolve to coordinate
+readonly default_long="<%= $default_long %>" ## Longitude for default location if ip can't resolve to coordinate
