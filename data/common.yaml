@@ -11,6 +11,49 @@ profile_globus::firewall::proto: "tcp"
 profile_globus::firewall::sources:
   - "0.0.0.0/0"
 
+profile_globus::gridmap::crons:
+  "SYNC gridmap file for gcs":
+    command: "/root/cron_scripts/oauth-mapfile_stage.sh && /root/cron_scripts/oauth-mapfile_sync.sh"
+    minute: "*/20"
+
+profile_globus::gridmap::files:
+  "/root/cron_scripts/oauth-mapfile_stage.sh":
+    content: |
+      #! /bin/bash
+      # This file is managed by Puppet - Changes may be overwritten
+      set -e
+      SRCFILES="/delta/home/sw/admin/grid-security/oauth-mapfile.cron"
+      DESTFILE="/etc/globus/oauth-mapfile.stage"
+      # FILTER RECORDS WITHOUT DOUBLE QUOTES, SORT BY MAPPED USERNAME AT END OF LINE
+      cat ${SRCFILES} | grep '\"' | awk '{print $NF,$0}' | sort | cut -f2- -d' ' | uniq > ${DESTFILE}
+    mode: "0700"
+
+  "/root/cron_scripts/oauth-mapfile_sync.sh":
+    content: |
+      #! /bin/bash
+      # This file is managed by Puppet - Changes may be overwritten
+      set -e
+      SRCFILE="/etc/globus/oauth-mapfile.stage"
+      DESTFILE="/etc/globus/oauth-mapfile"
+      SIZE_DIFF="2/3"
+      if ! diff ${SRCFILE} ${DESTFILE} >/dev/null 2>&1 ; then
+        if [ -f "${DESTFILE}" ]; then
+          # ONLY COPY IF SRCFILE IS >= 2/3 of DESTFILE SIZE
+          MINSIZE=$(bc <<< "$(stat --printf=%s ${DESTFILE})*${SIZE_DIFF}")
+          rsync -q --min-size=${MINSIZE} ${SRCFILE} ${DESTFILE}
+        else
+          rsync -q ${SRCFILE} ${DESTFILE}
+        fi
+      fi
+      chmod 0444 ${DESTFILE}
+      if ! diff ${SRCFILE} ${DESTFILE} >/dev/null 2>&1 ; then
+        echo "Error: The files did not sync:"
+        ls -lh ${SRCFILE}
+        ls -lh ${DESTFILE}
+      fi
+    mode: "0700"
+
+
 profile_globus::telegraf::gridftp_log_parse::enabled: true
 profile_globus::telegraf::gridftp_log_parse::required_pkgs:
   - "curl"
