@@ -1,0 +1,11 @@
+# This file is managed by Puppet
+
+module (load="imfile" mode="inotify")
+input(type="imfile"
+        File="/var/log/gridftp.log"
+        Tag="<%= $profile_globus::logging::message_tag %>"
+        Facility="local6"
+        Severity="info"
+#       Ruleset="default"
+        PersistStateInterval="1000"
+        freshStartTail="on")

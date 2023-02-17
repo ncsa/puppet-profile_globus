@@ -27,7 +27,13 @@ include ::profile_globus
 
 See also hiera values that need setting in https://github.com/srstevens/puppet-gcsv5
 
+
 ## Usage
+
+### Log collection
+
+Anything that logs to /var/log/gridftp.log will be collected by rsyslog by default. Rsyslog collection of any other custom logs
+is not yet supported.
 
 ### Telegraf
 

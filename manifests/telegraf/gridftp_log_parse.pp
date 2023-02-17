@@ -26,19 +26,18 @@
 # @example
 #   include profile_globus::telegraf::gridftp_log_parse
 class profile_globus::telegraf::gridftp_log_parse (
-  Boolean         $enabled,
-  Array[ String ] $required_pkgs,
-  Hash            $script_cfg,
-  Hash            $telegraf_cfg,
-){
-
+  Boolean       $enabled,
+  Array[String] $required_pkgs,
+  Hash          $script_cfg,
+  Hash          $telegraf_cfg,
+) {
   #
   # Requirements specific for this check
   #
   ensure_packages($required_pkgs)
 
   if ( empty($script_cfg['endpoint'])) {
-    notify {'profile_globus::telegraf::gridftp_log_parse::script_cfg missing value for endpoint':}
+    notify { 'profile_globus::telegraf::gridftp_log_parse::script_cfg missing value for endpoint': }
   }
 
   #
@@ -51,9 +50,9 @@ class profile_globus::telegraf::gridftp_log_parse (
   $script_cfg_full_path = "${script_path}/${script_base_name}_config"
 
   include profile_monitoring::telegraf
-  include ::telegraf
+  include telegraf
 
-  if ($enabled) and ($::profile_monitoring::telegraf::enabled) {
+  if ($enabled) and ($profile_monitoring::telegraf::enabled) {
     $ensure_parm = 'present'
   } else {
     $ensure_parm = 'absent'
@@ -73,12 +72,12 @@ class profile_globus::telegraf::gridftp_log_parse (
   telegraf::input { $script_base_name :
     ensure      => $ensure_parm,
     plugin_type => 'exec',
-    options     => [ $telegraf_cfg_final ],
+    options     => [$telegraf_cfg_final],
     require     => File[$script_full_path],
   }
 
   # Setup the actual script
-  $script_defaults = { source_path => $script_cfg_full_path,  }
+  $script_defaults = { source_path => $script_cfg_full_path, }
   file { $script_full_path :
     ensure  => $ensure_parm,
     content => epp("${module_name}/${script_base_name}${script_extension}.epp", $script_defaults),

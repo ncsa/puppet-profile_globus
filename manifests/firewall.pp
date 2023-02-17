@@ -18,9 +18,7 @@ class profile_globus::firewall (
   String          $proto,
   Array[String]   $sources,
 ) {
-
-  $sources.each | $location, $source |
-  {
+  $sources.each | $location, $source | {
     firewall { "290 allow Globus ${proto} from ${source}":
       proto  => $proto,
       dport  => $dports,

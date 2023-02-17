@@ -53,6 +53,19 @@ profile_globus::gridmap::files:
       fi
     mode: "0700"
 
+profile_globus::logging::gridftp_enable: true
+profile_globus::logging::gridftp_logrotate_manage: true
+profile_globus::logging::system_tag: null
+profile_globus::logging::logging_config_gridftp: |
+  module (load="imfile" mode="inotify")
+  input(type="imfile"
+          File="/var/log/gridftp.log"
+          Tag="gridftp_mg:"
+          Facility="local6"
+          Severity="info"
+  #       Ruleset="default"
+          PersistStateInterval="1000"
+          freshStartTail="on")
 
 profile_globus::telegraf::gridftp_log_parse::enabled: true
 profile_globus::telegraf::gridftp_log_parse::required_pkgs:
