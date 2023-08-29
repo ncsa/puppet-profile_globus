@@ -8,4 +8,5 @@ input(type="imfile"
         Severity="info"
 #       Ruleset="default"
         PersistStateInterval="1000"
+        reopenOnTruncate="on"
         freshStartTail="on")
