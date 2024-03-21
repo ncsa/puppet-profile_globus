@@ -18,7 +18,7 @@ class profile_globus::custom_gridftp (
   }
 
   if ( ! empty($conf_lines) ) {
-    $conf_lines.each | String $value | {
+    $conf_lines.each | String $line | {
       file_line { "ensure $line in $conf":
         ensure => present,
         path   => $conf,
