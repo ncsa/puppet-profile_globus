@@ -6,6 +6,7 @@
 #   include profile_globus::custom_gridftp
 class profile_globus::custom_gridftp (
   String     $conf='/etc/gridftp.d/custom_gridftp_conf',
+  Array[String] $conf_lines,
 ) {
   file { $conf:
     ensure  => file,
@@ -14,5 +15,16 @@ class profile_globus::custom_gridftp (
     mode    => '0644',
     owner   => root,
     notify  => Service['globus-gridftp-server'],
+  }
+
+  if ( ! empty($conf_lines) ) {
+    $conf_lines.each | String $value | {
+      file_line { "ensure $line in $conf":
+        ensure => present,
+        path   => $conf,
+        line   => $line,
+        match  => $line,
+      }
+    }
   }
 }
