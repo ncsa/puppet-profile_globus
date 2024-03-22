@@ -10,7 +10,6 @@ class profile_globus::custom_gridftp (
 ) {
   file { $conf:
     ensure  => file,
-    content => 'control_interface 127.0.0.1',
     group   => root,
     mode    => '0644',
     owner   => root,
@@ -24,6 +23,7 @@ class profile_globus::custom_gridftp (
         path   => $conf,
         line   => "$key $value",
         match  => $key,
+        notify => Service['globus-gridftp-server'],
       }
     }
   }

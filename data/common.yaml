@@ -5,6 +5,7 @@ lookup_options:
       strategy: "deep"
 
 profile_globus::custom_gridftp::conf_lines:
+  control_interface: "127.0.0.1"
 
 profile_globus::firewall::dports:
   - "443"
