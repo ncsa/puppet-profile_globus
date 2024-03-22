@@ -6,7 +6,7 @@
 #   include profile_globus::custom_gridftp
 class profile_globus::custom_gridftp (
   String     $conf='/etc/gridftp.d/custom_gridftp_conf',
-  Array[String] $conf_lines,
+  Array[String] $conf_lines=[],
 ) {
   file { $conf:
     ensure  => file,
