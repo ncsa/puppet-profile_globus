@@ -5,7 +5,8 @@
 # Details derived from:
 # https://globus-compute.readthedocs.io/en/stable/endpoints/multi_user.html
 #
-# @param $endpoint_name
+# @param endpoint_name - 
+# The name given to the endpoint configuration
 # 
 #
 # @example
@@ -15,8 +16,8 @@ class profile_globus::compute_agent::start_mep (
 ) {
   # Start/restart the endpoint service
   exec { 'start_mep':
-    command => "systemctl enable globus-compute-endpoint-${endpoint_name} --now",
-    unless => "systemctl --no-pager status globus-compute-endpoint-${endpoint_name}",
+    command   => "systemctl enable globus-compute-endpoint-${endpoint_name} --now",
+    unless    => "systemctl --no-pager status globus-compute-endpoint-${endpoint_name}",
     logoutput => 'on_failure',
   }
 }

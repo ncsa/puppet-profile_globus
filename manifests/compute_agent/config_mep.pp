@@ -14,10 +14,10 @@
 # command to coomplete the registration process and configure the systemd
 # service file.
 #
-# @param $endpoint_name -
+# @param endpoint_name -
 # The name given to the endpoint configuration
 # 
-# @param $endpoint_id -
+# @param endpoint_id -
 # The id generated from initialization through the native app auth step
 # on the first execution of 'globus-compute-endpoint enable-on-boot'
 #
@@ -95,7 +95,7 @@ class profile_globus::compute_agent::config_mep (
 
   ## Place the endpoint id
   file { 'endpoint_id':
-    ensure => file,
+    ensure  => file,
     path    => "/root/.globus_compute/${endpoint_name}/endpoint.json",
     owner   => 'root',
     group   => 'root',
