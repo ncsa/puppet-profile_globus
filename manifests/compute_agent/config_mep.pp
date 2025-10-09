@@ -32,7 +32,7 @@ class profile_globus::compute_agent::config_mep {
 
   $endpoint_id = lookup('profile_globus::compute_agent::endpoint_id')
   if ( empty($endpoint_id) ) {
-    fail ('No globus compute endpoint name defined. Cannont continue.')
+    fail ('No globus compute endpoint id defined. Cannont continue.')
   } else {
     notify ("Setting globus commpute endpoint id to ${endpoint_id}")
   }
