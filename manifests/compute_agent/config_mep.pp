@@ -14,19 +14,29 @@
 # command to coomplete the registration process and configure the systemd
 # service file.
 #
-# @param endpoint_name -
-# The name given to the endpoint configuration
-# 
-# @param endpoint_id -
-# The id generated from initialization through the native app auth step
-# on the first execution of 'globus-compute-endpoint enable-on-boot'
+# Requires $endpoint_name and $endpoint_id:
+# Set these in your node or role file.
 #
 # @example
-#  include profile_globus::compute_agent::config_mep
-class profile_globus::compute_agent::config_mep (
-  String $endpoint_name,
-  String $endpoint_id,
-) {
+# include profile_globus::compute_agent::config_mep
+#
+class profile_globus::compute_agent::config_mep {
+  
+  # Lookup our required endpoint information
+  $endpoint_name = lookup('profile_globus::compute_agent::endpoint_name')
+  if ( empty($endpoint_name) ) {
+    fail ('No globus compute endpoint name defined. Cannont continue.')
+  } else {
+    notify ("Setting globus commpute endpoint name to ${endpoint_name}")
+  }
+
+  $endpoint_id = lookup('profile_globus::compute_agent::endpoint_id')
+  if ( empty($endpoint_id) ) {
+    fail ('No globus compute endpoint name defined. Cannont continue.')
+  } else {
+    notify ("Setting globus commpute endpoint id to ${endpoint_id}")
+  }
+
   # Configure the service as a mmulti user endpoint
   exec { 'config_mep':
     command   => "globus-compute-endpoint configure --multi-user ${endpoint_name}",
@@ -102,4 +112,6 @@ class profile_globus::compute_agent::config_mep (
     mode    => '0600',
     content => "{\"endpoint_id\": \"${endpoint_id}\"}",
   }
+
+  ## Are there security tokens cached somewhere we need to re-install?
 }

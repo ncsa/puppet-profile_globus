@@ -72,3 +72,11 @@ profile_globus::telegraf::gridftp_log_parse::telegraf_cfg:
   data_format: "influx"
   interval: "1m"
   timeout: "30s"
+
+## Define enpoint name and id variables for globus compute
+## multi-user endpoint configuration.
+## Must be configured in the Heira role/node data
+## I don't see any support for multi-node endpoints
+## at this time so recommend using the node
+profile_globus::compute_agent::endpoint_name: ""
+profile_globus::compute_agent::endpoint_id: ""
