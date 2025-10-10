@@ -80,3 +80,4 @@ profile_globus::telegraf::gridftp_log_parse::telegraf_cfg:
 ## at this time so recommend using the node
 profile_globus::compute_agent::endpoint_name: ""
 profile_globus::compute_agent::endpoint_id: ""
+profile_globus::compute_agent::conf_file_src: ""

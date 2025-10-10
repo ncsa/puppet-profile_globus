@@ -21,7 +21,7 @@
 # include profile_globus::compute_agent::config_mep
 #
 class profile_globus::compute_agent::config_mep {
-  
+
   # Lookup our required endpoint information
   $endpoint_name = lookup('profile_globus::compute_agent::endpoint_name')
   if ( empty($endpoint_name) ) {
@@ -37,6 +37,14 @@ class profile_globus::compute_agent::config_mep {
     notify ("Setting globus commpute endpoint id to ${endpoint_id}")
   }
 
+  # Lookup the source for our desired config files. If a value
+  # is not set. No config files will be copied into the endpoint
+  # directory.
+  $config_src = lookup('profile_globus::compute_agent::conf_file_src')
+  if ( empty($config_src) ) {
+    notify ('No source for endpoint config files was specified. None will be imported.')
+  }
+
   # Configure the service as a mmulti user endpoint
   exec { 'config_mep':
     command   => "globus-compute-endpoint configure --multi-user ${endpoint_name}",
@@ -45,54 +53,56 @@ class profile_globus::compute_agent::config_mep {
     require   => Package['globus-compute-agent'],
   }
 
-  # Now get our production config files. # These need to exist in the xcat repo on the provisioner.
+  # Now get our production config files.
 
-  # Make sure there is at least a minimum identity map file in place.
-  # The cron job will update/keep this updated over time.
-  exec { 'fetch_mapfile':
-    command   => "curl --connect-timeout 10 --fail -o /root/.globus_compute/${endpoint_name}/oauth_mapfile http://172.28.22.19/install/repos/Globus-Compute-Agent/oauth_mapfile.${endpoint_name}",
-    creates   => "test -f /root/.globus_compute/${endpoint_name}/oauth_mapfile",
-    logoutput => true,
-  }
+  if (! empty ($config_src) ) {
+    # Make sure there is at least a minimum identity map file in place.
+    # The cron job will update/keep this updated over time.
+    exec { 'fetch_mapfile':
+      command   => "curl --connect-timeout 10 --fail -o /root/.globus_compute/${endpoint_name}/oauth_mapfile ${config_src}/oauth_mapfile.${endpoint_name}",
+      creates   => "test -f /root/.globus_compute/${endpoint_name}/oauth_mapfile",
+      logoutput => true,
+    }
 
-  ## The endpoint config file
-  file { 'ep_config':
-    ensure => file,
-    path   => "/root/.globus_compute/${endpoint_name}/config.yaml",
-    owner  => 'root',
-    group  => 'root',
-    mode   => '0600',
-    source => "http://172.28.22.19/install/repos/Globus-Compute-Agent/config.yaml.${endpoint_name}",
-  }
+    ## The endpoint config file
+    file { 'ep_config':
+      ensure => file,
+      path   => "/root/.globus_compute/${endpoint_name}/config.yaml",
+      owner  => 'root',
+      group  => 'root',
+      mode   => '0600',
+      source => "${config_src}/config.yaml.${endpoint_name}",
+    }
 
-  ## The user environment file
-  file { 'user_environment':
-    ensure => file,
-    path   => "/root/.globus_compute/${endpoint_name}/user_environment.yaml",
-    owner  => 'root',
-    group  => 'root',
-    mode   => '0644',
-    source => "http://172.28.22.19/install/repos/Globus-Compute-Agent/user_environment.yaml.${endpoint_name}",
-  }
+    ## The user environment file
+    file { 'user_environment':
+      ensure => file,
+      path   => "/root/.globus_compute/${endpoint_name}/user_environment.yaml",
+      owner  => 'root',
+      group  => 'root',
+      mode   => '0644',
+      source => "${config_src}/user_environment.yaml.${endpoint_name}",
+    }
 
-  ## The user schema file
-  file { 'user_schema':
-    ensure => file,
-    path   => "/root/.globus_compute/${endpoint_name}/user_config_schema.json",
-    owner  => 'root',
-    group  => 'root',
-    mode   => '0644',
-    source => "http://172.28.22.19/install/repos/Globus-Compute-Agent/user_config_schema.json.${endpoint_name}",
-  }
+    ## The user schema file
+    file { 'user_schema':
+      ensure => file,
+      path   => "/root/.globus_compute/${endpoint_name}/user_config_schema.json",
+      owner  => 'root',
+      group  => 'root',
+      mode   => '0644',
+      source => "${config_src}/user_config_schema.json.${endpoint_name}",
+    }
 
-  ## The user configuration template file
-  file { 'user_schema':
-    ensure => file,
-    path   => "/root/.globus_compute/${endpoint_name}/user_config_template.yaml.j2",
-    owner  => 'root',
-    group  => 'root',
-    mode   => '0644',
-    source => "http://172.28.22.19/install/repos/Globus-Compute-Agent/user_config_template.yaml.j2.${endpoint_name}",
+    ## The user configuration template file
+    file { 'user_schema':
+      ensure => file,
+      path   => "/root/.globus_compute/${endpoint_name}/user_config_template.yaml.j2",
+      owner  => 'root',
+      group  => 'root',
+      mode   => '0644',
+      source => "${config_src}/user_config_template.yaml.j2.${endpoint_name}",
+    }
   }
 
   ## Create systemd unit file
@@ -103,7 +113,7 @@ class profile_globus::compute_agent::config_mep {
     require   => Package['globus-compute-agent'],
   }
 
-  ## Place the endpoint id
+  ## Set the endpoint id
   file { 'endpoint_id':
     ensure  => file,
     path    => "/root/.globus_compute/${endpoint_name}/endpoint.json",
