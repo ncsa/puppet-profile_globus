@@ -19,8 +19,8 @@ class profile_globus::compute_agent::start_mep {
   if ( empty($endpoint_name) ) {
     fail ('No globus compute endpoint name defined. Cannont continue.')
   } else {
-    notify { 'endpoint_name':
-      message => "Setting globus commpute endpoint name to ${endpoint_name}",
+    notify { 'start_endpoint':
+      message => "Starting globus commpute endpoint named ${endpoint_name}",
     }
   }
   # Start/restart the endpoint service
