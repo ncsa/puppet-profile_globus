@@ -103,7 +103,7 @@ class profile_globus::compute_agent::config_mep {
     }
 
     ## The user configuration template file
-    file { 'user_schema':
+    file { 'user_template':
       ensure => file,
       path   => "/root/.globus_compute/${endpoint_name}/user_config_template.yaml.j2",
       owner  => 'root',
