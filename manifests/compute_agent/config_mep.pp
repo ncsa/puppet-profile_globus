@@ -1,6 +1,9 @@
 # @summary Configure Globus Compute MEP
 #
-# Configure a Multi User Endpoint with the provided endpoint name.
+# Configure a Multi User Endpoint with the provided endpoint name. This
+# is set up for use on a statelss node. Some assumptions may not be good
+# for other node types.
+#
 # MEP configuration files should be available in the repos directory
 # on the provisioner and tagged with the endpoint name so they can
 # be located for the matching endpoint.
@@ -112,7 +115,7 @@ class profile_globus::compute_agent::config_mep {
     require   => Package['globus-compute-agent'],
   }
 
-  ## Set the endpoint id
+  ## Restore the endpoint id file
   file { 'endpoint_id':
     ensure  => file,
     path    => "/root/.globus_compute/${endpoint_name}/endpoint.json",
@@ -122,5 +125,15 @@ class profile_globus::compute_agent::config_mep {
     content => "{\"endpoint_id\": \"${endpoint_id}\"}",
   }
 
-  ## Are there security tokens cached somewhere we need to re-install?
+  ## Restore the local database file containing the endpoint/application access tokens
+  ## Note: this is not endpoint specific but we will treat it that way until there is
+  ## a demonstrated use case for multiple endpoints on one server.
+  file { 'storage.db':
+    ensure  => file,
+    path    => "/root/.globus_compute/storage.db",
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0600',
+    source => "${config_src}/storage.db.${endpoint_name}",
+  }
 }
