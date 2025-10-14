@@ -29,14 +29,18 @@ class profile_globus::compute_agent::config_mep {
   if ( empty($endpoint_name) ) {
     fail ('No globus compute endpoint name defined. Cannont continue.')
   } else {
-    notify ("Setting globus commpute endpoint name to ${endpoint_name}")
+    notify { 'endpoint_name':
+      message => "Setting globus commpute endpoint name to ${endpoint_name}",
+    }
   }
 
   $endpoint_id = lookup('profile_globus::compute_agent::endpoint_id')
   if ( empty($endpoint_id) ) {
     fail ('No globus compute endpoint id defined. Cannont continue.')
   } else {
-    notify ("Setting globus commpute endpoint id to ${endpoint_id}")
+    notify { 'endpoint_id':
+      message => "Setting globus commpute endpoint id to ${endpoint_id}",
+    }
   }
 
   # Lookup the source for our desired config files. If a value
@@ -44,7 +48,9 @@ class profile_globus::compute_agent::config_mep {
   # directory.
   $config_src = lookup('profile_globus::compute_agent::conf_file_src')
   if ( empty($config_src) ) {
-    notify ('No source for endpoint config files was specified. None will be imported.')
+    notify { 'missing_config':
+      message => 'No source for endpoint config files was specified. None will be imported.',
+    }
   }
 
   # Configure the service as a mmulti user endpoint
