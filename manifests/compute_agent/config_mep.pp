@@ -34,7 +34,7 @@ class profile_globus::compute_agent::config_mep {
     fail ('No globus compute endpoint name defined. Cannont continue.')
   } else {
     notify { 'endpoint_name':
-      message => "Setting globus commpute endpoint name to ${endpoint_name}",
+      message => "Setting globus commpute endpoint name to ${endpoint_name}.",
     }
   }
 
@@ -43,7 +43,7 @@ class profile_globus::compute_agent::config_mep {
     fail ('No globus compute endpoint id defined. Cannont continue.')
   } else {
     notify { 'endpoint_id':
-      message => "Setting globus commpute endpoint id to ${endpoint_id}",
+      message => "Setting globus commpute endpoint id to ${endpoint_id}.",
     }
   }
 
@@ -70,10 +70,18 @@ class profile_globus::compute_agent::config_mep {
   if (! empty ($config_src) ) {
     # Make sure there is at least a minimum identity map file in place.
     # The cron job will update/keep this updated over time.
-    exec { 'fetch_mapfile':
-      command   => "/usr/bin/curl --connect-timeout 10 --fail -o /root/.globus_compute/${endpoint_name}/oauth_mapfile ${config_src}/oauth_mapfile.${endpoint_name}", # lint:ignore:140chars
-      creates   => "/usr/bin/test -f /root/.globus_compute/${endpoint_name}/oauth_mapfile",
-      logoutput => true,
+    #exec { 'fetch_mapfile':
+    #  command   => "/usr/bin/curl --connect-timeout 10 --fail -o /root/.globus_compute/${endpoint_name}/oauth-mapfile ${config_src}/oauth-mapfile.${endpoint_name}", # lint:ignore:140chars
+    #  creates   => "/usr/bin/test -f /root/.globus_compute/${endpoint_name}/oauth-mapfile",
+    #  logoutput => true,
+    #}
+    file { 'mapfile_init':
+      ensure => file,
+      path   => "/root/.globus_compute/${endpoint_name}/oauth-mapfile",
+      owner  => 'root',
+      group  => 'root',
+      mode   => '0600',
+      source => "${config_src}/oauth-mapfile.${endpoint_name}",
     }
 
     ## The endpoint config file
