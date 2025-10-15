@@ -15,7 +15,7 @@
 #
 class profile_globus::compute_agent::start_mep {
   Exec {
-    path => [ '/bin', '/sbin', '/usr/bin', '/usr/sbin' ],
+    path => ['/bin', '/sbin', '/usr/bin', '/usr/sbin'],
   }
 
   # Lookup our required endpoint information

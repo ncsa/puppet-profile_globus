@@ -25,7 +25,7 @@
 #
 class profile_globus::compute_agent::config_mep {
   Exec {
-    path => [ '/bin', '/sbin', '/usr/bin', '/usr/sbin' ],
+    path => ['/bin', '/sbin', '/usr/bin', '/usr/sbin'],
   }
 
   # Lookup our required endpoint information
@@ -139,11 +139,11 @@ class profile_globus::compute_agent::config_mep {
   ## Note: this is not endpoint specific but we will treat it that way until there is
   ## a demonstrated use case for multiple endpoints on one server.
   file { 'storage.db':
-    ensure  => file,
-    path    => "/root/.globus_compute/storage.db",
-    owner   => 'root',
-    group   => 'root',
-    mode    => '0600',
+    ensure => file,
+    path   => "/root/.globus_compute/storage.db",
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0600',
     source => "${config_src}/storage.db.${endpoint_name}",
   }
 }
