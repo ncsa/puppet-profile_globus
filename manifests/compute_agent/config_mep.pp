@@ -126,12 +126,15 @@ class profile_globus::compute_agent::config_mep {
   }
 
   ## Create systemd unit file
-  exec { 'enable_systemd_unit':
-    command   => "globus-compute-endpoint enable-on-boot ${endpoint_name}",
-    creates   => "/etc/systemd/system/globus-compute-endpoint-${endpoint_name}.service",
-    logoutput => true,
-    require   => Package['globus-compute-agent'],
+  systemd::unit_file { 'endpoint.service':
+    source => "${config_src}/endpoints/${endpoint_name}/globus-compute-endpoint-${endpoint_name}.service",
   }
+  #exec { 'enable_systemd_unit':
+  #   command   => "globus-compute-endpoint enable-on-boot ${endpoint_name}",
+  #   creates   => "/etc/systemd/system/globus-compute-endpoint-${endpoint_name}.service",
+  #   logoutput => true,
+  #   require   => Package['globus-compute-agent'],
+  # }
 
   ## Restore the endpoint id file
   file { 'endpoint_id':
