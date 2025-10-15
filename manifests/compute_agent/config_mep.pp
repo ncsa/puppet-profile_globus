@@ -71,8 +71,8 @@ class profile_globus::compute_agent::config_mep {
     # Make sure there is at least a minimum identity map file in place.
     # The cron job will update/keep this updated over time.
     exec { 'fetch_mapfile':
-      command   => "curl --connect-timeout 10 --fail -o /root/.globus_compute/${endpoint_name}/oauth_mapfile ${config_src}/oauth_mapfile.${endpoint_name}", # lint:ignore:140chars
-      creates   => "test -f /root/.globus_compute/${endpoint_name}/oauth_mapfile",
+      command   => "/usr/bin/curl --connect-timeout 10 --fail -o /root/.globus_compute/${endpoint_name}/oauth_mapfile ${config_src}/oauth_mapfile.${endpoint_name}", # lint:ignore:140chars
+      creates   => "/usr/bin/test -f /root/.globus_compute/${endpoint_name}/oauth_mapfile",
       logoutput => true,
     }
 
