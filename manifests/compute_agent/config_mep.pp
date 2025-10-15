@@ -24,6 +24,10 @@
 # include profile_globus::compute_agent::config_mep
 #
 class profile_globus::compute_agent::config_mep {
+  Exec {
+    path => [ '/bin', '/sbin', '/usr/bin', '/usr/sbin' ],
+  }
+
   # Lookup our required endpoint information
   $endpoint_name = lookup('profile_globus::compute_agent::endpoint_name')
   if ( empty($endpoint_name) ) {
