@@ -81,7 +81,7 @@ class profile_globus::compute_agent::config_mep {
       owner  => 'root',
       group  => 'root',
       mode   => '0600',
-      source => "${config_src}/oauth-mapfile.${endpoint_name}",
+      source => "${config_src}/endpoints/${endpoint_name}/oauth-mapfile",
     }
 
     ## The endpoint config file
@@ -91,7 +91,7 @@ class profile_globus::compute_agent::config_mep {
       owner  => 'root',
       group  => 'root',
       mode   => '0600',
-      source => "${config_src}/config.yaml.${endpoint_name}",
+      source => "${config_src}/endpoints/${endpoint_name}/config.yaml",
     }
 
     ## The user environment file
@@ -101,7 +101,7 @@ class profile_globus::compute_agent::config_mep {
       owner  => 'root',
       group  => 'root',
       mode   => '0644',
-      source => "${config_src}/user_environment.yaml.${endpoint_name}",
+      source => "${config_src}/endpoints/${endpoint_name}/user_environment.yaml",
     }
 
     ## The user schema file
@@ -111,7 +111,7 @@ class profile_globus::compute_agent::config_mep {
       owner  => 'root',
       group  => 'root',
       mode   => '0644',
-      source => "${config_src}/user_config_schema.json.${endpoint_name}",
+      source => "${config_src}/endpoints/${endpoint_name}/user_config_schema.json",
     }
 
     ## The user configuration template file
@@ -121,7 +121,7 @@ class profile_globus::compute_agent::config_mep {
       owner  => 'root',
       group  => 'root',
       mode   => '0644',
-      source => "${config_src}/user_config_template.yaml.j2.${endpoint_name}",
+      source => "${config_src}/endpoints/${endpoint_name}/user_config_template.yaml.j2",
     }
   }
 
@@ -152,6 +152,6 @@ class profile_globus::compute_agent::config_mep {
     owner  => 'root',
     group  => 'root',
     mode   => '0600',
-    source => "${config_src}/storage.db.${endpoint_name}",
+    source => "${config_src}/endpoints/${endpoint_name}/storage.db",
   }
 }
