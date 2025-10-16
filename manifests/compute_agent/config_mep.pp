@@ -171,7 +171,7 @@ class profile_globus::compute_agent::config_mep {
   # Install the id mapping script
   file { 'mapapp_script':
     ensure => file,
-    path   => '/root/.globus_compute/user_identity_mappers',
+    path   => '/root/.globus_compute/user_identity_mapper',
     group  => 'root',
     mode   => '0755',
     owner  => 'root',
