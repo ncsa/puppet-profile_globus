@@ -92,7 +92,7 @@ class profile_globus::compute_agent::config_mep {
       owner  => 'root',
       group  => 'root',
       mode   => '0600',
-      source => ${identity_mapfile},
+      source => $identity_mapfile,
     }
 
     ## The identity mapping config
