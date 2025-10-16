@@ -71,7 +71,7 @@ class profile_globus::compute_agent::config_mep {
     # Make sure the install directory exists
     file { 'globus_compute.dir':
       ensure => directory,
-      path   => "/root/.globus_compute/",
+      path   => '/root/.globus_compute/',
       owner  => 'root',
       group  => 'root',
       mode   => '0700',
@@ -150,11 +150,11 @@ class profile_globus::compute_agent::config_mep {
     ## a demonstrated use case for multiple endpoints on one server.
     file { 'storage.db':
       ensure => file,
-      path   => "/root/.globus_compute/storage.db",
+      path   => '/root/.globus_compute/storage.db',
       owner  => 'root',
       group  => 'root',
       mode   => '0600',
       source => "${config_src}/endpoints/${endpoint_name}/storage.db",
     }
-  } 
+  }
 }

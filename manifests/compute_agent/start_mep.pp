@@ -1,17 +1,22 @@
 # @summary Start a configured Globus Compute MEP
 #
-# Start the MEP service with the configured endpoint name
+# Create the systemd unit file and start the named
+# endpoint service. Only configured for stateless
+# nodes. Will need some alterations to work better
+# on stateful nodes (not requiring a remote unit file).
 #
 # Details derived from:
 # https://globus-compute.readthedocs.io/en/stable/endpoints/multi_user.html
 #
-# Requires  $endpoint_name:
+# Requires $endpoint_name:
 # The name given to the endpoint configuration. Set this in
 # your node or role file.
-# 
+#
+# Requires $config_src:
+# The location of the file repo to locate the unit file.
 #
 # @example
-#  include profile_globus::compute_agent::config_mep
+#  include profile_globus::compute_agent::start_mep
 #
 class profile_globus::compute_agent::start_mep {
   Exec {
@@ -27,10 +32,16 @@ class profile_globus::compute_agent::start_mep {
       message => "Starting globus compute endpoint named ${endpoint_name}",
     }
   }
+  
+  $service_name = "globus-compute-endpoint-${endpoint_name}.service"
+
+  # Lookup the source for the service unit file.
+  $config_src = lookup('profile_globus::compute_agent::conf_file_src')
 
   ## Restore systemd unit file (for stateless servers) and start
   ## the endpoint service
   systemd::unit_file { 'mep.service':
+    ensure => present
     source => "${config_src}/endpoints/${endpoint_name}/globus-compute-endpoint-${endpoint_name}.service",
     enable => true,
     active => true,
