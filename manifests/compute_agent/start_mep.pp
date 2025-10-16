@@ -32,7 +32,7 @@ class profile_globus::compute_agent::start_mep {
       message => "Starting globus compute endpoint named ${endpoint_name}",
     }
   }
-  
+
   # Lookup the source for the service unit file.
   $config_src = lookup('profile_globus::compute_agent::conf_file_src')
 

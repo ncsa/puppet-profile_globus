@@ -92,7 +92,7 @@ class profile_globus::compute_agent::config_mep {
       owner  => 'root',
       group  => 'root',
       mode   => '0600',
-      source => "${identity_mapfile}",
+      source => ${identity_mapfile},
     }
 
     ## The identity mapping config
@@ -104,7 +104,7 @@ class profile_globus::compute_agent::config_mep {
       mode   => '0600',
       source => "${config_src}/endpoints/${endpoint_name}/identity_mapping_config.json",
     }
-    
+
     ## The endpoint config file
     file { 'ep_config':
       ensure => file,
@@ -177,5 +177,4 @@ class profile_globus::compute_agent::config_mep {
     owner  => 'root',
     source => 'puppet:///modules/profile_globus/mapapp.py',
   }
-
 }
