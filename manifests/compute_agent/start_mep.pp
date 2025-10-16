@@ -32,7 +32,7 @@ class profile_globus::compute_agent::start_mep {
   ## the endpoint service
   systemd::unit_file { 'mep.service':
     source => "${config_src}/endpoints/${endpoint_name}/globus-compute-endpoint-${endpoint_name}.service",
-    enable  => true,
-    active  => true,
+    enable => true,
+    active => true,
   }
 }
