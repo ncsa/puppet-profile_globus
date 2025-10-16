@@ -31,7 +31,7 @@ class profile_globus::compute_agent::config_mep {
   # Lookup our required endpoint information
   $endpoint_name = lookup('profile_globus::compute_agent::endpoint_name')
   if ( empty($endpoint_name) ) {
-    fail ('No globus compute endpoint name defined. Cannont continue.')
+    fail ('No globus compute endpoint name defined. Cannot continue.')
   } else {
     notify { 'endpoint_name':
       message => "Setting globus compute endpoint name to ${endpoint_name}.",
@@ -40,11 +40,17 @@ class profile_globus::compute_agent::config_mep {
 
   $endpoint_id = lookup('profile_globus::compute_agent::endpoint_id')
   if ( empty($endpoint_id) ) {
-    fail ('No globus compute endpoint id defined. Cannont continue.')
+    fail ('No globus compute endpoint id defined. Cannot continue.')
   } else {
     notify { 'endpoint_id':
       message => "Setting globus compute endpoint id to ${endpoint_id}.",
     }
+  }
+
+  # Get the path to our idenity map file for this resource
+  $identity_mapfile = lookup('profile_globus::compute_agent::identity_mapfile')
+  if ( empty($identity_mapfile) ) {
+    fail ('No user identity map file defined. Cannot continue.')
   }
 
   # Lookup the source for our desired config files. If a value
@@ -80,13 +86,13 @@ class profile_globus::compute_agent::config_mep {
 
     # Make sure there is at least a minimum identity map file in place.
     # The cron job will update/keep this updated over time.
-    file { 'mapfile_init':
+    file { 'identity_mapfile':
       ensure => file,
       path   => "/root/.globus_compute/${endpoint_name}/oauth-mapfile",
       owner  => 'root',
       group  => 'root',
       mode   => '0600',
-      source => "${config_src}/endpoints/${endpoint_name}/oauth-mapfile",
+      source => "${identity_mapfile}",
     }
 
     ## The identity mapping config
@@ -138,6 +144,7 @@ class profile_globus::compute_agent::config_mep {
       mode   => '0644',
       source => "${config_src}/endpoints/${endpoint_name}/user_config_template.yaml.j2",
     }
+
     ## Restore the endpoint id file
     file { 'endpoint_id':
       ensure  => file,
@@ -160,4 +167,15 @@ class profile_globus::compute_agent::config_mep {
       source => "${config_src}/endpoints/${endpoint_name}/storage.db",
     }
   }
+
+  # Install the id mapping script
+  file { 'mapapp_script':
+    ensure => file,
+    path   => '/root/.globus_compute/user_identity_mappers',
+    group  => 'root',
+    mode   => '0755',
+    owner  => 'root',
+    source => 'puppet:///modules/profile_globus/mapapp.py',
+  }
+
 }
