@@ -33,15 +33,16 @@ class profile_globus::compute_agent::start_mep {
     }
   }
   
-  $service_name = "globus-compute-endpoint-${endpoint_name}.service"
-
   # Lookup the source for the service unit file.
   $config_src = lookup('profile_globus::compute_agent::conf_file_src')
 
+  # Set the service name
+  $service_name = "globus-compute-endpoint-${endpoint_name}.service"
+
   ## Restore systemd unit file (for stateless servers) and start
   ## the endpoint service
-  systemd::unit_file { 'mep.service':
-    ensure => present
+  systemd::unit_file { $service_name:
+    ensure => present,
     source => "${config_src}/endpoints/${endpoint_name}/globus-compute-endpoint-${endpoint_name}.service",
     enable => true,
     active => true,
