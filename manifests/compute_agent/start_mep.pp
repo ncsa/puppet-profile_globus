@@ -24,13 +24,15 @@ class profile_globus::compute_agent::start_mep {
     fail ('No globus compute endpoint name defined. Cannont continue.')
   } else {
     notify { 'start_endpoint':
-      message => "Starting globus commpute endpoint named ${endpoint_name}",
+      message => "Starting globus compute endpoint named ${endpoint_name}",
     }
   }
-  # Start/restart the endpoint service
-  exec { 'start_mep':
-    command   => "systemctl enable globus-compute-endpoint-${endpoint_name} --now",
-    unless    => "systemctl --no-pager status globus-compute-endpoint-${endpoint_name}",
-    logoutput => 'on_failure',
+
+  ## Restore systemd unit file (for stateless servers) and start
+  ## the endpoint service
+  systemd::unit_file { 'mep.service':
+    source => "${config_src}/endpoints/${endpoint_name}/globus-compute-endpoint-${endpoint_name}.service",
+    enable  => true,
+    active  => true,
   }
 }

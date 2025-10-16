@@ -58,19 +58,36 @@ class profile_globus::compute_agent::config_mep {
   }
 
   # Configure the service as a mmulti user endpoint
-  exec { 'config_mep':
-    command   => "globus-compute-endpoint configure --multi-user ${endpoint_name}",
-    creates   => "/root/.globus_compute/${endpoint_name}",
-    logoutput => true,
-    require   => Package['globus-compute-agent'],
-  }
+  # exec { 'config_mep':
+  #   command   => "globus-compute-endpoint configure --multi-user ${endpoint_name}",
+  #   creates   => "/root/.globus_compute/${endpoint_name}",
+  #   logoutput => true,
+  #   require   => Package['globus-compute-agent'],
+  # }
 
   # Now get our production config files.
 
   if (! empty ($config_src) ) {
+    # Make sure the install directory exists
+    file { 'globus_compute.dir':
+      ensure => directory,
+      path   => "/root/.globus_compute/",
+      owner  => 'root',
+      group  => 'root',
+      mode   => '0700',
+    }
+
+    file { 'endpoint.dir':
+      ensure => directory,
+      path   => "/root/.globus_compute/${endpoint_name}",
+      owner  => 'root',
+      group  => 'root',
+      mode   => '0744',
+    }
+
     # Make sure there is at least a minimum identity map file in place.
     # The cron job will update/keep this updated over time.
-    -> file { 'mapfile_init':
+    file { 'mapfile_init':
       ensure => file,
       path   => "/root/.globus_compute/${endpoint_name}/oauth-mapfile",
       owner  => 'root',
@@ -80,7 +97,7 @@ class profile_globus::compute_agent::config_mep {
     }
 
     ## The endpoint config file
-    -> file { 'ep_config':
+    file { 'ep_config':
       ensure => file,
       path   => "/root/.globus_compute/${endpoint_name}/config.yaml",
       owner  => 'root',
@@ -90,7 +107,7 @@ class profile_globus::compute_agent::config_mep {
     }
 
     ## The user environment file
-    -> file { 'user_environment':
+    file { 'user_environment':
       ensure => file,
       path   => "/root/.globus_compute/${endpoint_name}/user_environment.yaml",
       owner  => 'root',
@@ -100,7 +117,7 @@ class profile_globus::compute_agent::config_mep {
     }
 
     ## The user schema file
-    -> file { 'user_schema':
+    file { 'user_schema':
       ensure => file,
       path   => "/root/.globus_compute/${endpoint_name}/user_config_schema.json",
       owner  => 'root',
@@ -110,7 +127,7 @@ class profile_globus::compute_agent::config_mep {
     }
 
     ## The user configuration template file
-    -> file { 'user_template':
+    file { 'user_template':
       ensure => file,
       path   => "/root/.globus_compute/${endpoint_name}/user_config_template.yaml.j2",
       owner  => 'root',
@@ -119,7 +136,7 @@ class profile_globus::compute_agent::config_mep {
       source => "${config_src}/endpoints/${endpoint_name}/user_config_template.yaml.j2",
     }
     ## Restore the endpoint id file
-    -> file { 'endpoint_id':
+    file { 'endpoint_id':
       ensure  => file,
       path    => "/root/.globus_compute/${endpoint_name}/endpoint.json",
       owner   => 'root',
@@ -131,7 +148,7 @@ class profile_globus::compute_agent::config_mep {
     ## Restore the local database file containing the endpoint/application access tokens
     ## Note: this is not endpoint specific but we will treat it that way until there is
     ## a demonstrated use case for multiple endpoints on one server.
-    -> file { 'storage.db':
+    file { 'storage.db':
       ensure => file,
       path   => "/root/.globus_compute/storage.db",
       owner  => 'root',
@@ -139,11 +156,5 @@ class profile_globus::compute_agent::config_mep {
       mode   => '0600',
       source => "${config_src}/endpoints/${endpoint_name}/storage.db",
     }
-  }
-
-  ## Create systemd unit file
-  -> systemd::unit_file { 'endpoint.service':
-    source => "${config_src}/endpoints/${endpoint_name}/globus-compute-endpoint-${endpoint_name}.service",
-  }
-  
+  } 
 }
