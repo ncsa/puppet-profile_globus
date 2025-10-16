@@ -57,24 +57,17 @@ class profile_globus::compute_agent::config_mep {
     }
   }
 
-  # Configure the service as a mmulti user endpoint
-  # exec { 'config_mep':
-  #   command   => "globus-compute-endpoint configure --multi-user ${endpoint_name}",
-  #   creates   => "/root/.globus_compute/${endpoint_name}",
-  #   logoutput => true,
-  #   require   => Package['globus-compute-agent'],
-  # }
-
   # Now get our production config files.
 
   if (! empty ($config_src) ) {
     # Make sure the install directory exists
     file { 'globus_compute.dir':
-      ensure => directory,
-      path   => '/root/.globus_compute/',
-      owner  => 'root',
-      group  => 'root',
-      mode   => '0700',
+      ensure  => directory,
+      path    => '/root/.globus_compute/',
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0700',
+      require => Package['globus-compute-agent'],
     }
 
     file { 'endpoint.dir':
@@ -96,6 +89,16 @@ class profile_globus::compute_agent::config_mep {
       source => "${config_src}/endpoints/${endpoint_name}/oauth-mapfile",
     }
 
+    ## The identity mapping config
+    file { 'mapping_config':
+      ensure => file,
+      path   => "/root/.globus_compute/${endpoint_name}/identity_mapping_config.json",
+      owner  => 'root',
+      group  => 'root',
+      mode   => '0600',
+      source => "${config_src}/endpoints/${endpoint_name}/identity_mapping_config.json",
+    }
+    
     ## The endpoint config file
     file { 'ep_config':
       ensure => file,
