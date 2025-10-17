@@ -67,7 +67,7 @@ class profile_globus::compute_agent::config_mep {
 
   if (! empty ($config_src) ) {
     # Make sure the install directory exists
-    file { 'globus_compute.dir':
+    file { 'install_dir':
       ensure  => directory,
       path    => '/root/.globus_compute/',
       owner   => 'root',
@@ -76,7 +76,7 @@ class profile_globus::compute_agent::config_mep {
       require => Package['globus-compute-agent'],
     }
 
-    file { 'endpoint.dir':
+    file { 'endpoint_dir':
       ensure => directory,
       path   => "/root/.globus_compute/${endpoint_name}",
       owner  => 'root',
@@ -84,11 +84,20 @@ class profile_globus::compute_agent::config_mep {
       mode   => '0744',
     }
 
+    file { 'idmap_dir':
+      ensure => directory,
+      path   => "/etc/globus/",
+      owner  => 'root',
+      group  => 'root',
+      mode   => '0744',
+    }
+
     # Make sure there is at least a minimum identity map file in place.
-    # The cron job will update/keep this updated over time.
+    # The cron job will update/keep this updated over time. This location
+    # is hard-coded in the mapapp.py script...
     file { 'identity_mapfile':
       ensure => file,
-      path   => "/root/.globus_compute/${endpoint_name}/oauth-mapfile",
+      path   => "/etc/globus/oauth-mapfile",
       owner  => 'root',
       group  => 'root',
       mode   => '0600',
