@@ -4,21 +4,29 @@
 # is set up for use on a statelss node. Some assumptions may not be good
 # for other node types.
 #
-# MEP configuration files should be available in the repos directory
-# on the provisioner and tagged with the endpoint name so they can
-# be located for the matching endpoint.
+# MEP configuration files should either be already installed (for
+# a stateful server) or at a location accessible using Puppet's
+# file resource. $cfg_src can be any valid "source" that the file
+# resource understands (eg file, puppet, etc.).
 #
 # Details derived from:
 # https://globus-compute.readthedocs.io/en/stable/endpoints/multi_user.html
 # 
-# Note: The first time you create a new enpoint, you must do so by hand.
+# Note: The first time you create a new endpoint, you must do so by hand.
 # You will be given a link to authenticate to and receive a confirmation
 # code that must be input to the 'globus-compute-endpoint enable-on-boot'
 # command to coomplete the registration process and configure the systemd
 # service file.
 #
 # Requires $endpoint_name and $endpoint_id:
-# Set these in your node or role file.
+# Set these in your nodes or role file.
+# 
+# For identity mapping we also require a script for
+# looking up identities in our controlled map file.
+# -- this should be fixed to allow other lookup options -- JAG
+#
+# $identity_mapfile is the path to the file containing
+# containing user identity associations
 #
 # @example
 # include profile_globus::compute_agent::config_mep

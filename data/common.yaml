@@ -75,11 +75,21 @@ profile_globus::telegraf::gridftp_log_parse::telegraf_cfg:
 
 ## Define enpoint name and id variables for globus compute
 ## multi-user endpoint configuration.
-## Must be configured in the Heira role/node data
+## Must be configured in the Heira role/nodes data
 ## I don't see any support for multi-node endpoints
-## at this time so recommend using the node
+## at this time so recommend using the nodes file for these
+# The cluster name is used in locating files in the home
+# file system (building directory paths).
 profile_globus::compute_agent::cluster_name: ""
+# The short name for this enpoint. Other names/descriptions
+# can be set in the config.yaml file for display on the globus
+# console.
 profile_globus::compute_agent::endpoint_name: ""
+# The number assiged this enpoint when created.
 profile_globus::compute_agent::endpoint_id: ""
+# Where to location the config files for this endpoint
+# Can be any valid source identifier to Puppet's file resource.
 profile_globus::compute_agent::conf_file_src: ""
+# The source path to the user identity map file to be
+# installed on the enpoint server.
 profile_globus::compute_agent::identity_mapfile: ""
