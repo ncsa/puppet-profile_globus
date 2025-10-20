@@ -1,7 +1,7 @@
 # @summary Configure Globus Compute MEP
 #
 # Configure a Multi User Endpoint with the provided endpoint name. This
-# is set up for use on a statelss node. Some assumptions may not be good
+# is set up for use on a stateless node. Some assumptions may not be good
 # for other node types.
 #
 # MEP configuration files should either be already installed (for
@@ -11,16 +11,16 @@
 #
 # Details derived from:
 # https://globus-compute.readthedocs.io/en/stable/endpoints/multi_user.html
-# 
+#
 # Note: The first time you create a new endpoint, you must do so by hand.
 # You will be given a link to authenticate to and receive a confirmation
 # code that must be input to the 'globus-compute-endpoint enable-on-boot'
-# command to coomplete the registration process and configure the systemd
+# command to complete the registration process and configure the systemd
 # service file.
 #
 # Requires $endpoint_name and $endpoint_id:
 # Set these in your nodes or role file.
-# 
+#
 # For identity mapping we also require a script for
 # looking up identities in our controlled map file.
 # -- this should be fixed to allow other lookup options -- JAG
@@ -101,8 +101,11 @@ class profile_globus::compute_agent::config_mep {
     }
 
     # Make sure there is at least a minimum identity map file in place.
-    # The cron job will update/keep this updated over time. This location
-    # is hard-coded in the mapapp.py script...
+    # This location is hard-coded in the mapapp.py script...
+    # Puppet will keep the destination file in sync with the
+    # source file. You may need to adjust the puppet agent execution
+    # interval depending on how frequently you would like to have this
+    # sync'd.
     file { 'identity_mapfile':
       ensure => file,
       path   => "/etc/globus/oauth-mapfile",
