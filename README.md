@@ -27,7 +27,7 @@ include ::profile_globus
 
 See also hiera values that need setting in https://github.com/srstevens/puppet-gcsv5
 
-Additions for Globus Compute Multi-User Endpoints:
+### Additions for Globus Compute Multi-User Endpoints:
 Two new functions have been added to configure and start the compute agent on a server.
 - profile_globus::config_mep
 - profile_globus::start_mep
