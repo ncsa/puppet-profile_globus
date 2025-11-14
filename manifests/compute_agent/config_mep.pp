@@ -206,19 +206,19 @@ file { 'agentlog-to-rsyslog':
   group   => 'root',
   mode    => '0644',
   notify  => Service['rsyslog'],
-  content => @(EOT)
-# We need the imfile module
-module(load="imfile" PollingInterval="5")
+  content => @("CONTENT")
+    # We need the imfile module
+    module(load="imfile" PollingInterval="5")
 
-# Our endpoint log file
-input(type="imfile"
-  File="/root/.globus_compute/${endpoint_name}/endpoint.log"
-  Tag="GCA:"
-  PersistStateInterval="0"
-  reopenOnTruncate="on"
-  discardTruncatedMsg="on"
-  msgDiscardingError="on"
-)
-EOT
+    # Our endpoint log file
+    input(type="imfile"
+      File="/root/.globus_compute/${endpoint_name}/endpoint.log"
+      Tag="GCA:"
+      PersistStateInterval="0"
+      reopenOnTruncate="on"
+      discardTruncatedMsg="on"
+      msgDiscardingError="on"
+    )
+  | CONTENT
   }
 }
