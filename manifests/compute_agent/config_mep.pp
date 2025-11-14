@@ -219,6 +219,6 @@ input(type="imfile"
   discardTruncatedMsg="on"
   msgDiscardingError="on"
 )
-EOT,
+EOT
   }
 }
