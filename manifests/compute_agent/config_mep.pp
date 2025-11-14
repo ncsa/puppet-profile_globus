@@ -201,7 +201,7 @@ class profile_globus::compute_agent::config_mep {
 # Setup an rsyslog rule to get the agent log messages into the log stream
 file { 'agentlog-to-rsyslog':
   ensure  => file,
-  path    => "/var/rsyslog.d/60_globus_compute.conf",
+  path    => "/etc/rsyslog.d/60_globus_compute.conf",
   owner   => 'root',
   group   => 'root',
   mode    => '0644',
@@ -221,4 +221,3 @@ input(type="imfile"
 EOT
   }
 }
-
