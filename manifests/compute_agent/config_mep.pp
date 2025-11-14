@@ -205,6 +205,7 @@ file { 'agentlog-to-rsyslog':
   owner   => 'root',
   group   => 'root',
   mode    => '0644',
+  notify  => Service['rsyslog'],
   content => @(EOT)
 # We need the imfile module
 module(load="imfile" PollingInterval="5")
@@ -218,6 +219,6 @@ input(type="imfile"
   discardTruncatedMsg="on"
   msgDiscardingError="on"
 )
-EOT
+EOT,
   }
 }
